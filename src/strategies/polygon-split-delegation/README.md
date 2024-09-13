@@ -1,41 +1,28 @@
-# with-delegation
+# polygon-split-delegation
 
-If you want to delegate your voting power to another wallet address,
-Unlike `delegation` strategy, delegator can't take back their voting power from the delegatee. and also delegate's voting power is added up. so no need to have an additional strategy
+If you want to delegate your voting power to different addresses, you can use this strategy to calculate the voting power that will be delegated based on the Subgraph data.
 
 ```TEXT
-Total VP = delegated VP + own VP (if not delegated to anyone)
+Total VP = incoming delegated VP + own VP - outgoing delegated VP
 ```
 
-The sub strategies defined in params are used to delegate vote from one address to another. 
-
-> Important Note: Don't pass strategies that need override
+The sub strategies defined in params are used to get the votint power that will be delegated based on the Subgraph data.
 
 | Param Name      | Description |
 | ----------- | ----------- |
 | strategies      | list of sub strategies to calculate voting power based on delegation      |
-| delegationSpace (optional)   | Get delegations of a particular space (by default it take delegations of current space)  |
-| delegationNetwork (optional)   | Get delegations of a particular network (by default it take delegations of current network)  |
+| subgraphUrl   | The URL of the subgraph to query for the delegation data        |
 
 Here is an example of parameters:
 
 ```json
 {
-  "symbol": "YFI (delegated)",
+  "subgraphUrl": "https://api.studio.thegraph.com/query/87073/split-delegation/v0.0.5",
   "strategies": [
     {
-      "name": "erc20-balance-of",
+      "name": "polygon-self-staked-pol",
       "params": {
-        "address": "0xBa37B002AbaFDd8E89a1995dA52740bbC013D992",
-        "symbol": "YFI",
-        "decimals": 18
-      }
-    },
-    {
-      "name": "yearn-vault",
-      "params": {
-        "address": "0xBA2E7Fed597fd0E3e70f5130BcDbbFE06bB94fe1",
-        "symbol": "YFI (yYFI)",
+        "stakeManagerAddress": "0x4AE8f648B1Ec892B6cc68C89cc088583964d08bE",
         "decimals": 18
       }
     }
